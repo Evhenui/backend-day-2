@@ -1,0 +1,4 @@
+- `GET /health` — health check
+- `GET /api/notes` — list all notes
+- `GET /api/notes/:id` — get note by id
+- `POST /api/notes` — create new note (body: `{ title, content }`)
