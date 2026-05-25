@@ -1,0 +1,33 @@
+POST http://localhost:3000/api/notes
+Content-Type: application/json
+
+{
+  "title": "Перша нотатка",
+  "content": "Це моя перша нотатка через справжнє API"
+}
+
+### Створити ще одну
+POST http://localhost:3000/api/notes
+Content-Type: application/json
+
+{
+  "title": "Друга",
+  "content": "І ця теж"
+}
+
+### Перевірити що з'явились
+GET http://localhost:3000/api/notes
+
+### Спробувати створити без title (має повернути 400)
+POST http://localhost:3000/api/notes
+Content-Type: application/json
+
+{
+  "content": "А де title?"
+}
+
+### Отримати конкретну нотатку (підстав id з попереднього POST)
+GET http://localhost:3000/api/notes/ad34c0f4-3899-4b8b-9913-1712047bd641
+
+### Неіснуюча — має повернути 404
+GET http://localhost:3000/api/notes/неіснуючий-id
