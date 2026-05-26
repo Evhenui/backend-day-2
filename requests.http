@@ -1,33 +1,85 @@
+### Health check
+GET http://localhost:3000/health
+
+### Створити нотатку
 POST http://localhost:3000/api/notes
 Content-Type: application/json
 
 {
   "title": "Перша нотатка",
-  "content": "Це моя перша нотатка через справжнє API"
+  "content": "Це моя перша нотатка"
 }
 
-### Створити ще одну
+### Спроба створити з порожнім title (має повернути 400)
 POST http://localhost:3000/api/notes
 Content-Type: application/json
 
 {
-  "title": "Друга",
-  "content": "І ця теж"
+  "title": "",
+  "content": "test"
 }
 
-### Перевірити що з'явились
+### Спроба створити з пробілами як title (теж 400 — після trim стане порожнім)
+POST http://localhost:3000/api/notes
+Content-Type: application/json
+
+{
+  "title": "   ",
+  "content": "test"
+}
+
+### Спроба створити з title-числом (має повернути 400)
+POST http://localhost:3000/api/notes
+Content-Type: application/json
+
+{
+  "title": 123,
+  "content": "test"
+}
+
+### Спроба підсунути id та createdAt (зайве буде проігноровано)
+POST http://localhost:3000/api/notes
+Content-Type: application/json
+
+{
+  "title": "Нормальна нотатка",
+  "content": "З підсунутими полями",
+  "id": "fake-id",
+  "createdAt": "2099-01-01",
+  "isAdmin": true
+}
+
+### Усі нотатки
 GET http://localhost:3000/api/notes
 
-### Спробувати створити без title (має повернути 400)
-POST http://localhost:3000/api/notes
+### Конкретна (підстав id)
+GET http://localhost:3000/api/notes/e3587383-3caf-44ec-9c7b-b3524ec5b6a4
+
+### Оновити частково — тільки title
+PATCH http://localhost:3000/api/notes/e3587383-3caf-44ec-9c7b-b3524ec5b6a4
 Content-Type: application/json
 
 {
-  "content": "А де title?"
+  "title": "Оновлений заголовок"
 }
 
-### Отримати конкретну нотатку (підстав id з попереднього POST)
-GET http://localhost:3000/api/notes/ad34c0f4-3899-4b8b-9913-1712047bd641
+### Оновити обидва поля
+PATCH http://localhost:3000/api/notes/e3587383-3caf-44ec-9c7b-b3524ec5b6a4
+Content-Type: application/json
 
-### Неіснуюча — має повернути 404
-GET http://localhost:3000/api/notes/неіснуючий-id
+{
+  "title": "Новий title",
+  "content": "Новий content"
+}
+
+### Спроба порожнього PATCH (має повернути 400)
+PATCH http://localhost:3000/api/notes/ID_СЮДИ
+Content-Type: application/json
+
+{}
+
+### Видалити
+DELETE http://localhost:3000/api/notes/ID_СЮДИ
+
+### Перевірити що видалена (має повернути 404)
+GET http://localhost:3000/api/notes/ID_СЮДИ
