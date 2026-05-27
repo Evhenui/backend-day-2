@@ -73,13 +73,13 @@ Content-Type: application/json
 }
 
 ### Спроба порожнього PATCH (має повернути 400)
-PATCH http://localhost:3000/api/notes/ID_СЮДИ
+PATCH http://localhost:3000/api/notes/e3587383-3caf-44ec-9c7b-b3524ec5b6a4
 Content-Type: application/json
 
 {}
 
 ### Видалити
-DELETE http://localhost:3000/api/notes/ID_СЮДИ
+DELETE http://localhost:3000/api/notes/e3587383-3caf-44ec-9c7b-b3524ec5b6a4
 
 ### Перевірити що видалена (має повернути 404)
-GET http://localhost:3000/api/notes/ID_СЮДИ
+GET http://localhost:3000/api/notes/e3587383-3caf-44ec-9c7b-b3524ec5b6a4
