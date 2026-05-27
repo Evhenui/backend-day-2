@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { randomUUID } from 'node:crypto';
 import { Note } from '../types/note';
+import { NotFoundError } from '../errors/index.js';
 
 let notes: Note[] = [];
 
@@ -14,7 +15,7 @@ export const getNoteById = (req: Request, res: Response) => {
   const note = notes.find((n) => n.id === id);
 
   if (!note) {
-    return res.status(404).json({ error: 'Note not found' });
+    throw new NotFoundError('Note not found');
   }
 
   res.json(note);
@@ -39,7 +40,7 @@ export const updateNote = (req: Request, res: Response) => {
   const noteIndex = notes.findIndex((n) => n.id === id);
 
   if (noteIndex === -1) {
-    return res.status(404).json({ error: 'Note not found' });
+    throw new NotFoundError('Note not found');
   }
 
   const update = req.body;
@@ -58,7 +59,7 @@ export const deleteNote = (req: Request, res: Response) => {
   const noteIndex = notes.findIndex((n) => n.id === id);
 
   if (noteIndex === -1) {
-    return res.status(404).json({ error: 'Note not found' });
+    throw new NotFoundError('Note not found');
   }
 
   notes.splice(noteIndex, 1);
