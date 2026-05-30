@@ -1,10 +1,13 @@
-## Endpoints
+## Setup
 
-| Method | Endpoint | Description | Success |
-|--------|----------|-------------|---------|
-| GET | `/health` | Health check | 200 |
-| GET | `/api/notes` | List all notes | 200 |
-| GET | `/api/notes/:id` | Get note by id | 200 |
-| POST | `/api/notes` | Create new note | 201 |
-| PATCH | `/api/notes/:id` | Update note | 200 |
-| DELETE | `/api/notes/:id` | Delete note | 204 |
+1. Start PostgreSQL via Docker:
+   docker compose up -d
+
+2. Install dependencies:
+   npm install
+
+3. Apply migrations:
+   npx prisma migrate dev
+
+4. Start dev server:
+   npm run dev

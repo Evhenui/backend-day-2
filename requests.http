@@ -1,20 +1,24 @@
-### Невалідний ID — має бути 404
-GET http://localhost:3000/api/notes/неіснуючий-id
-
-### Помилка валідації — має бути 400 з details
+### Створити нотатку
 POST http://localhost:3000/api/notes
 Content-Type: application/json
 
 {
-  "title": "",
-  "content": "test"
+  "title": "З БД",
+  "content": "Перша нотатка з реальної БД"
 }
 
-### Невалідний PATCH — теж 400
-PATCH http://localhost:3000/api/notes/якийсь-id
+### Створити ще одну
+POST http://localhost:3000/api/notes
 Content-Type: application/json
 
-{}
+{
+  "title": "Друга",
+  "content": "І ця тут"
+}
 
-### Спробуй "поламати" сервер навмисно — глянемо на 500
-GET http://localhost:3000/api/notes/this-will-throw
+### Подивитись всі
+GET http://localhost:3000/api/notes
+
+### Тепер ПЕРЕЗАПУСТИ сервер (Ctrl+C, потім npm run dev знову)
+### І подивись що нотатки ВСЕ ЩЕ ТАМ
+GET http://localhost:3000/api/notes

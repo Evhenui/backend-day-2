@@ -1,67 +1,81 @@
 import { Request, Response } from 'express';
-import { randomUUID } from 'node:crypto';
-import { Note } from '../types/note';
+import { prisma } from '../lib/prisma.js';
 import { NotFoundError } from '../errors/index.js';
 
-let notes: Note[] = [];
+export const getAllNotes = async (req: Request, res: Response) => {
+  const notes = await prisma.note.findMany({
+    orderBy: { createdAt: 'desc' },
+  });
 
-export const getAllNotes = (req: Request, res: Response) => {
   res.json(notes);
 };
 
-export const getNoteById = (req: Request, res: Response) => {
+export const getNoteById = async (req: Request<{ id: string }>, res: Response) => {
   const { id } = req.params;
 
-  const note = notes.find((n) => n.id === id);
+  const note = await prisma.note.findUnique({
+    where: { id },
+  });
 
   if (!note) {
     throw new NotFoundError('Note not found');
   }
 
   res.json(note);
-}
+};
 
-export const createNote = (req: Request, res: Response) => {
+export const createNote = async (req: Request<{ id: string }>, res: Response) => {
   const { title, content } = req.body;
 
-  const newNote: Note = {
-    id: randomUUID(),
-    title,
-    content,
-    createdAt: new Date(),
-  };
+  const newNote = await prisma.note.create({
+    data: { title, content },
+  });
 
-  notes.push(newNote);
   res.status(201).json(newNote);
 };
 
-export const updateNote = (req: Request, res: Response) => {
-  const { id } = req.params;
-  const noteIndex = notes.findIndex((n) => n.id === id);
+type UpdateNoteBody = {
+  title?: string;
+  content?: string;
+};
 
-  if (noteIndex === -1) {
+export const updateNote = async (
+  req: Request<{ id: string }, unknown, UpdateNoteBody>,
+  res: Response,
+) => {
+  const { id } = req.params;
+  const updates = req.body;
+
+  const existing = await prisma.note.findUnique({
+    where: { id },
+  });
+
+  if (!existing) {
     throw new NotFoundError('Note not found');
   }
 
-  const update = req.body;
+  const updatedNote = await prisma.note.update({
+    where: { id },
+    data: updates,
+  });
 
-  const updatedNote = {
-    ...notes[noteIndex],
-    ...update,
-  };
-
-  notes[noteIndex] = updatedNote;
   res.json(updatedNote);
 };
 
-export const deleteNote = (req: Request, res: Response) => {
+export const deleteNote = async (req: Request<{ id: string }>, res: Response) => {
   const { id } = req.params;
-  const noteIndex = notes.findIndex((n) => n.id === id);
 
-  if (noteIndex === -1) {
+  const existing = await prisma.note.findUnique({
+    where: { id },
+  });
+
+  if (!existing) {
     throw new NotFoundError('Note not found');
   }
 
-  notes.splice(noteIndex, 1);
+  await prisma.note.delete({
+    where: { id },
+  });
+
   res.status(204).send();
 };
